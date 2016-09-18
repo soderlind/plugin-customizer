@@ -8,9 +8,7 @@ Author: Per Soderlind
 Author URI: https://soderlind.no
 */
 
-/**
- *
- */
+define( 'PLUGIN_CUSTOMIZER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 // require_once( dirname( __FILE__ ) . '/lib/customizer-blank-slate.php' );
 
@@ -35,6 +33,12 @@ class PluginCustomizer {
 		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_customizer_url' ), 500 );
 		add_action( 'admin_init', array( $this, 'root_menu_redirect_to_customizer' ) , 1 );
 
+		add_filter( 'generate_rewrite_rules', array( $this, 'my_permalink_rewrite_rule' ) );
+		add_filter( 'query_vars', array( $this, 'my_permalink_query_vars' ) );
+		add_filter( 'admin_init', array( $this, 'my_permalink_flush_rewrite_rules' ) );
+		add_action( 'parse_request', array( $this, 'my_permalink_parse_request' ) );
+		// add_action( 'admin_init', array( $this, 'load_template' ) );
+
 		// register customizer settings
 		add_action( 'wp_loaded', function() {
 				add_action( 'customize_register', array( $this, 'customize_plugin' ) );
@@ -42,6 +46,105 @@ class PluginCustomizer {
 
 		add_action( 'customize_controls_enqueue_scripts', array( $this, 'enqueue_plugin_cusomizer_scripts' ) );
 	}
+
+	// https://developer.wordpress.org/reference/functions/load_template/#comment-727
+
+	function my_permalink_rewrite_rule( $wp_rewrite ) {
+		 $new_rules = array(
+			  'plugin-customizer-template/(.*)$' => sprintf( 'index.php?plugin-customizer-template=%s',$wp_rewrite->preg_index( 1 ) ),
+			  /*
+			  // a more complex permalink:
+			  'my-permalink/([^/]+)/([^.]+).html$' => sprintf("index.php?my_permalink_variable_01=%s&my_permalink_variable_02=%s",$wp_rewrite->preg_index(1),$wp_rewrite->preg_index(2))
+			  */
+		 );
+
+		 $wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
+		 return $wp_rewrite->rules;
+	}
+
+	function my_permalink_query_vars( $query_vars ) {
+		$query_vars[] = 'plugin-customizer-template';
+		/*
+		// need more variables?:
+		$query_vars[] = 'my_permalink_variable_02';
+		$query_vars[] = 'my_permalink_variable_03';
+		*/
+		return $query_vars;
+	}
+
+	function my_permalink_parse_request( $wp_query ) {
+		if ( isset( $wp_query->query_vars['plugin-customizer-template'] ) ) { // same as the first custom variable in my_permalink_query_vars( $query_vars )
+
+			require_once( PLUGIN_CUSTOMIZER_PLUGIN_DIR . '/include/class-plugin-customizer-template-loader.php' );
+
+
+
+			$template_names = array(
+			   // "plugin-customizer-template-{$panel}.php",
+			   // "plugin-customizer-template-{$section}.php",
+			//    'plugin-customizer-template.php',
+			   "{$wp_query->query_vars['plugin-customizer-template']}.php",
+			);
+
+			$template_loader = new Plugin_Customizer_Template_Loader();
+			$template = $template_loader->locate_template( $template_names );
+
+
+			$classes   = array( 'plugin-customizer' );
+			// $classes[] = $args['show_playlist'] ? '' : 'is-playlist-hidden';
+			// $classes[] = sprintf( 'cue-theme-%s', sanitize_html_class( $args['theme'] ) );
+			// $classes   = implode( ' ', array_filter( $classes ) );
+			// if ( $args['container'] ) {
+			// 	echo '<div class="cue-playlist-container">';
+			// }
+			// do_action( 'cue_before_playlist', $post, $tracks, $args );
+			wp_head();
+			include( $template );
+			wp_footer();
+
+			exit( 0 );
+		}
+	}
+
+	function my_permalink_flush_rewrite_rules() {
+		$rules = $GLOBALS['wp_rewrite']->wp_rewrite_rules();
+		if ( ! isset( $rules['plugin-customizer-template/(.*)$'] ) ) { // must be the same rule as in my_permalink_rewrite_rule($wp_rewrite)
+			global $wp_rewrite;
+			$wp_rewrite->flush_rules();
+		}
+	}
+
+
+	public function load_template() {
+		if ( isset( $_GET['preview'] ) ) {
+			add_filter( 'template_include', function() {
+				return plugins_url( 'plugin-customizer-theme.php', __FILE__ );
+			});
+			// require_once( PLUGIN_CUSTOMIZER_PLUGIN_DIR . '/include/class-plugin-customizer-template-loader.php' );
+			//
+			// $template_names = array(
+			// 	// "plugin-customizer-template-{$panel}.php",
+			// 	// "plugin-customizer-template-{$section}.php",
+			// 	'plugin-customizer-template.php',
+			// );
+			//
+			// $template_loader = new Plugin_Customizer_Template_Loader();
+			// $template = $template_loader->locate_template( $template_names );
+			//
+			// $classes   = array( 'plugin-customizer' );
+			// // $classes[] = $args['show_playlist'] ? '' : 'is-playlist-hidden';
+			// // $classes[] = sprintf( 'cue-theme-%s', sanitize_html_class( $args['theme'] ) );
+			// // $classes   = implode( ' ', array_filter( $classes ) );
+			// // if ( $args['container'] ) {
+			// // 	echo '<div class="cue-playlist-container">';
+			// // }
+			// // do_action( 'cue_before_playlist', $post, $tracks, $args );
+			// include( $template );
+		}
+	}
+
+
+
 
 	public function enqueue_plugin_cusomizer_scripts() {
 		$handle = 'plugin-cusomizer';
@@ -53,8 +156,10 @@ class PluginCustomizer {
 
 		// 'http://customizer.dev/2016/09/11/hello-world/'
 		$args = array(
-			'url'     => 'http://customizer.dev/2016/09/11/hello-world/',
-			'section' => 'form_title_section',
+			// 'type'  => 'panel',
+			'panel' => 'plugin_settings_panel',
+			// 'url'    => 'http://customizer.dev/2016/09/11/hello-world/',
+			'url'    => 'http://customizer.dev/plugin-customizer-template/plugin-customizer-template/',
 		);
 		wp_add_inline_script(
 			$handle,
@@ -131,7 +236,7 @@ class PluginCustomizer {
 		$url = add_query_arg( $this->plugin_customizer_trigger , 'on', $url );
 		// $url = add_query_arg(  'url' , $this->get_preview_template_link( plugins_url( 'form-template.php', __FILE__))  , wp_customize_url() );
 		// $url = add_query_arg( 'url' , $this->get_preview_template_link( home_url( '/' ) )  , $url );
-		$url = add_query_arg( 'preview' , true  , $url );
+		// $url = add_query_arg( 'preview' , true  , $url );
 		// $url = add_query_arg( 'url' , urlencode( plugins_url( 'form-template.php', __FILE__ ) ) , $url );
 		$url = add_query_arg( 'customizer_blank_slate', 'on', $url );
 		//autofocus
