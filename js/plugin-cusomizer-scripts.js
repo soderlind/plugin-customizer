@@ -6,8 +6,8 @@ var PluginCustomizer = (function( api, $ ) {
 
 	var component = {
 		data: {
-			url: null,
-			section: null
+			panel: null,
+			url: null
 		}
 	};
 
@@ -16,23 +16,25 @@ var PluginCustomizer = (function( api, $ ) {
 	 *
 	 * @param {object} args Args.
 	 * @param {string} args.url  Preview URL.
-	 * @param {string} args.section  Section ID.
+	 * @param {string} args.panel  Section ID.
 	 * @returns {void}
 	 */
 	component.init = function init( args ) {
 		_.extend( component.data, args );
-		if ( ! args || ! args.url || ! args.section) {
+		if ( ! args || ! args.url || ! args.panel) {
 			throw new Error( 'Missing args' );
 		}
 
-		api.section( args.section , function( section ) {
+		api.panel( args.panel , function( panel ) {
 			var previousUrl, clearPreviousUrl, previewUrlValue;
 			previewUrlValue = api.previewer.previewUrl;
 			clearPreviousUrl = function() {
 				previousUrl = null;
 			};
 
-			section.expanded.bind( function( isExpanded ) {
+			console.log(args.url);
+
+			panel.expanded.bind( function( isExpanded ) {
 				var url;
 				if ( isExpanded ) {
 					url = args.url;
