@@ -5,9 +5,6 @@
 				<div id="primary" class="content-area <?php /*echo esc_attr( $classes );*/ ?>">
 					<main id="main" class="site-main" role="main">
 						<article>
-							<header class="entry-header">
-								<h1 id="newsletter-title" class="entry-title"><?php echo get_option( 'newsletter_title' ); ?></h1>
-							</header>
 							<div id="newsletter-content" class="entry-content content">
 								<?php echo get_option( 'newsletter_content' ); ?>
 							</div>
