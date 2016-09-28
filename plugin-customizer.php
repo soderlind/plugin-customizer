@@ -56,15 +56,15 @@ class PluginCustomizer {
 		add_action( 'admin_init', array( $this, 'settings_init' ) );
 
 		/**
-		 * [$priority description]
-		 * Priority must be between 2 and 9
+		 * When saving the setinngs, the customizer settings must be visible for admin-ajax.php
+		 * so add it before the bailout test.
 		 */
-		$priority = 9;
+		$customize_register_priority = 9; // Priority must be between 2 and 9
 		add_action( 'wp_loaded', function() {
 			add_action( 'customize_register', array( $this, 'customizer_plugin_settings' ) );
-		}, $priority );
+		}, $customize_register_priority );
 		/**
-		 * Bail out if not called from the plugin menu links.
+		 * Bailout if not called from the plugin menu links.
 		 */
 		if ( ! isset( $_GET[ PLUGIN_CUSTOMIZER_PARAM_NAME ] ) || PLUGIN_CUSTOMIZER_PARAM_VALUE !== wp_unslash( $_GET[ PLUGIN_CUSTOMIZER_PARAM_NAME ] ) ) {
 			return;
@@ -127,7 +127,7 @@ class PluginCustomizer {
 			 * https://make.wordpress.org/core/2016/02/16/selective-refresh-in-the-customizer/
 			 */
 			// add_action( 'customize_register', array( $this, 'customizer_plugin_selective_refresh' ) );
-		}, $priority );
+		}, $customize_register_priority );
 	}
 
 	/**
