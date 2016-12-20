@@ -1,6 +1,8 @@
 # Plugin Customizer
 [![Build Status](https://travis-ci.org/soderlind/plugin-customizer.svg?branch=master)](https://travis-ci.org/soderlind/plugin-customizer) [![Code Climate](https://codeclimate.com/github/soderlind/plugin-customizer/badges/gpa.svg)](https://codeclimate.com/github/soderlind/plugin-customizer)
 
+**NOTE there's a [bug in the Twenty Seventeen theme](https://core.trac.wordpress.org/ticket/39335) breaking this plugin**
+
 Please also see the [Plugin Customizer](http://soderlind.no/plugin-customizer/) article at my site.
 
 ## The main plugin file, `plugin-customizer.php`:
