@@ -9,7 +9,14 @@ env:
   jquery: true
   node: true
 
-# http://eslint.org/docs/rules/
+# plugins:
+#     - "wordpress"
+#
+# extends:
+#     - "plugin:wordpress/recommended"
+
+
+http://eslint.org/docs/rules/
 rules:
   # Possible Errors
   comma-dangle: [2, never]

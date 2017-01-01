@@ -4,25 +4,21 @@ engines:
     enabled: true
     config:
       languages:
-        - php
-    exclude_paths:
-      - date-time-picker*.php
+      - javascript
+      - php
   eslint:
     enabled: true
-    env:
-      jquery: true
+    # channel: "eslint-2"
+    # plugins: "wordpress"
+    # extends: "plugin:wordpress/recommended"
   fixme:
     enabled: true
-  phpcodesniffer:
+  phpmd:
     enabled: true
-    config:
-      standard: "WordPress-Core"
 ratings:
   paths:
-    - "**.js"
-    - "**.php"
+  - "**.js"
+  - "**.module"
+  - "**.php"
 exclude_paths:
-  - node_modules/**/*
-  - languages/**
-  - css/**
-  - js/**
+- node_modules/
