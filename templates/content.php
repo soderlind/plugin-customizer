@@ -1,17 +1,23 @@
 <body class="single " >
-	<div id="page" class="site">
-		<div class="site-inner">
-			<div id="content" class="site-content">
-				<div id="primary" class="content-area <?php /*echo esc_attr( $classes );*/ ?>">
-					<main id="main" class="site-main" role="main">
-						<article>
-							<div id="newsletter-content" class="entry-content content">
-								<?php echo get_option( 'newsletter_content' ); ?>
-							</div>
-						</article>
-					</main>
-				</div>
-			</div>
+	<style>
+	body {
+	  width: 100%;
+	  height: 100%;
+	  background-color: #333333;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+	#info {
+	    width: 90%;
+	    height: 90%;
+	    background-color: #EEE;
+		padding: 1em;
+	}
+	</style>
+	<div id="info">
+		<div id="newsletter-content" class="entry-content content">
+			<?php echo get_option( 'newsletter_content' ); ?>
 		</div>
 	</div>
 </body>
