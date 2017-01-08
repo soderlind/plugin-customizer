@@ -1,5 +1,5 @@
 
-<img src="assets/plugin-customizer-small.png" width="200" style="float:right"/>
+<img src="assets/plugin-customizer-small.png" width="200" align="right" style="float:right"/>
 # Plugin Customizer
 <div style="clear:right;"></div>
 [![Build Status](https://travis-ci.org/soderlind/plugin-customizer.svg?branch=master)](https://travis-ci.org/soderlind/plugin-customizer) [![Code Climate](https://codeclimate.com/github/soderlind/plugin-customizer/badges/gpa.svg)](https://codeclimate.com/github/soderlind/plugin-customizer)
