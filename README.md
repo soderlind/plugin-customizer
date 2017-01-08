@@ -10,7 +10,7 @@ The reason I made Plugin Customizer is to make it easy to add WordPress Customiz
 
 ## Use
 
-1. Clone or download this repository and copy the `src` folder to your plugin.
+1. Clone or [download](https://github.com/soderlind/plugin-customizer/archive/master.zip) this repository and copy the `src` folder to your plugin.
 1. Add the autoloder to your plugin.
 1. Add Plugin_Customizer class and Plugin_Customizer_Interface to your plugin class.
 
@@ -101,11 +101,11 @@ public function plugin_customizer_previewer_postmessage_script() {
 
 In these functions you add the needed sections, settings and controls followin the specification the [Customizer API](https://developer.wordpress.org/themes/advanced-topics/customizer-api/).
 
-The demo plugin has a simple implementation.
+The demo plugin has a [simple implementation](https://github.com/soderlind/plugin-customizer/blob/master/plugin-customizer-demo.php#L92-L191).
 
 ## Demo
 
-You know the drill, download, add and activate the plugin. It will add the `Plugin Customizer`  admin menu entries in:
+You know the drill, [download](https://github.com/soderlind/plugin-customizer/archive/master.zip), add and activate the plugin. It will add the `Plugin Customizer`  admin menu entries in:
 - Root menu
 - Submenu
 - Admin bar menu
