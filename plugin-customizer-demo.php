@@ -33,7 +33,7 @@ $class_loader->register();
 class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements PluginCustomizer\Plugin_Customizer_Interface {
 
 	function __construct() {
-		$this->init( array(
+		PluginCustomizer\Plugin_Customizer::init( array(
 			'name' => 'Customizer Demo', // name your plugin
 			'url'  => plugins_url( '', __FILE__ ),
 			'path' => plugin_dir_path( __FILE__ ),

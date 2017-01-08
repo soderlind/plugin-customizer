@@ -13,6 +13,7 @@ The reason I made Plugin Customizer is to make it easy to add WordPress Customiz
 1. Clone or [download](https://github.com/soderlind/plugin-customizer/archive/master.zip) this repository and copy the `src` folder to your plugin.
 1. Add the autoloder to your plugin.
 1. Add Plugin_Customizer class and Plugin_Customizer_Interface to your plugin class.
+1. Init Plugin_Customizer in your constructor my calling PluginCustomizer\Plugin_Customizer::init()
 
 It you'd like to learn more, read the inline comments in the [demo plugin](plugin-customizer-demo.php) and [src/Plugin_Customizer.php](src/Plugin_Customizer.php)
 
@@ -24,7 +25,13 @@ $class_loader->addNamespace( 'PluginCustomizer', PLUGIN_CUSTOMIZER_DEMO_PATH . '
 $class_loader->register();
 
 class MyPlugin extends PluginCustomizer\Plugin_Customizer implements PluginCustomizer\Plugin_Customizer_Interface {
-
+	function __construct() {
+		PluginCustomizer\Plugin_Customizer::init( array(
+			'name' => 'Customizer Demo', // name your plugin
+			'url'  => plugins_url( '', __FILE__ ),
+			'path' => plugin_dir_path( __FILE__ ),
+		) );
+	}
 }
 ```
 Btw, an interface can be considered as a reminder of which methods you must add to your MyPlugin class. They are:
