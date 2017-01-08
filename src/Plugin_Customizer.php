@@ -1,32 +1,74 @@
 <?php
 
-if ( ! class_exists( 'PluginCustomizer' ) ) {
-	abstract class PluginCustomizer {
+namespace PluginCustomizer;
 
-		private static $customize_register_priority = 9; // Priority must be between 2 and 9
-		public static $id;
-		private static $org_theme;
-		private static $theme_name = 'twentysixteen';
-		function __construct() {
+define( 'PLUGIN_CUSTOMIZER_VERSION', '1.1.0' );
+
+if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
+	abstract class Plugin_Customizer implements Plugin_Customizer_Interface {
+
+		private  $customize_register_priority = 9; // Priority must be between 2 and 9
+		private  $slug;
+		private  $org_theme;
+		private  $plugin_name;
+		private  $plugin_url;
+		private  $plugin_root;
+		private  $theme_name = 'twentysixteen';
+
+		/**
+		 * Singleton from: from http://stackoverflow.com/a/15870364/1434155
+		 */
+		private static $instances = array();
+		protected function __construct() {}
+		protected function __clone() {}
+		public function __wakeup() {
+			throw new Exception( 'Cannot unserialize singleton' );
+		}
+
+		public static function instance() {
+			$class = get_called_class(); // late-static-bound class name
+			if ( ! isset( self::$instances[ $class ] ) ) {
+				self::$instances[ $class ] = new static();
+			}
+			return self::$instances[ $class ];
+		}
+
+
+		function init( $config = array() ) {
+
+			if ( ! count( $config ) ) {
+				wp_die( /*$message = '', $title = '', $args = array()*/ );
+			}
+
+			$config = wp_parse_args( $config, array(
+				'name' => 'Plugin Customizer',
+				'url'  => plugins_url( '', dirname( __FILE__ ) ),
+				'path' => plugin_dir_path( dirname( __FILE__ ) ),
+			) );
+
+			$this->slug = sanitize_title( $config['name'] , 'plugin-customizer' );
+			$this->plugin_name = $config['name'];
+			$this->plugin_url  = $config['url'];
+			$this->plugin_root = $config['path'];
+
 			/**
 			 * When saving the setinngs, the customizer settings must be visible for admin-ajax.php
 			 * so add it before the bailout test.
 			 */
-			self::$id = sanitize_title( get_called_class() , 'plugin_customizer' );
 			add_action( 'wp_loaded', function() {
 				add_action( 'customize_register', array( $this, 'customizer_plugin_settings' ) );
-			}, self::$customize_register_priority );
+			}, $this->customize_register_priority );
 			/**
 			 * Bailout if not called from the plugin menu links.
 			 */
-			if ( ! isset( $_GET[ self::$id ] ) || 'on' !== wp_unslash( $_GET[ self::$id ] ) ) {
+			if ( ! isset( $_GET[ $this->slug ] ) || 'on' !== wp_unslash( $_GET[ $this->slug ] ) ) {
 				return;
 			}
 			/**
 			 * Set the customizer title.
 			 */
 			add_filter( 'pre_option_blogname', function(){
-				return $this->plugin_name();
+				return $this->plugin_name;
 			} );
 
 			/**
@@ -34,28 +76,20 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 			 * the current theme doesn't support WordPress Customizer we'll use a theme
 			 * that supports it.
 			 */
-			add_filter( 'theme_root', array( $this, 'switch_theme_root_plugin' ) );
-			add_filter( 'theme_root_uri', array( $this, 'switch_theme_root_plugin' ) );
-			add_filter( 'template', array( $this, 'plugin_theme_name' ) );
-			add_filter( 'stylesheet', array( $this, 'plugin_theme_name' ) );
-
-			add_filter( 'pre_option_current_theme', array( $this, 'plugin_theme_name' ) );
-
-			add_filter( 'pre_option_stylesheet', array( $this, 'plugin_theme_name' ) );
-			add_filter( 'pre_option_template', array( $this, 'plugin_theme_name' ) );
-			// Handle custom theme roots.
-			add_filter( 'pre_option_stylesheet_root', function() {
-				return get_raw_theme_root( self::$theme_name, true );
+			add_action( 'setup_theme', function() {
+				add_filter( 'theme_root', array( $this, 'switch_theme_root_path' ) );
+				add_filter( 'pre_option_stylesheet', function(){
+					return $this->theme_name;
+				} );
+				add_filter( 'pre_option_template', function(){
+					return $this->theme_name;
+				} );
 			} );
-			add_filter( 'pre_option_template_root', function() {
-				return get_raw_theme_root( self::$theme_name, true );
-			} );
-
 			/**
 			 * Remove all other panels and sections from the customizer.
 			 */
-			require_once( plugin_dir_path( __FILE__ ) . '/class-plugin-customizer-blank-slate.php' );
-			PluginCustomizerBlankSlate::instance();
+			$blank_slate = Blank_Slate::instance();
+			$blank_slate->init( $this->slug, $this->plugin_url, $this->plugin_root );
 
 			/**
 			 * Create preview template permalink rules.
@@ -103,7 +137,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 				 * https://make.wordpress.org/core/2016/02/16/selective-refresh-in-the-customizer/
 				 */
 				// add_action( 'customize_register', array( $this, 'customizer_plugin_selective_refresh' ) );
-			}, self::$customize_register_priority );
+			}, $this->customize_register_priority );
 
 		}
 
@@ -119,7 +153,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		 */
 		function rewrite_rule( $wp_rewrite ) {
 			 $new_rules = array(
-				  sprintf( '%s/templates/(.*)$', self::$id ) => sprintf( 'index.php?plugin-customizer-template-%s=%s', self::$id, $wp_rewrite->preg_index( 1 ) ),
+				  sprintf( '%s/templates/(.*)$', $this->slug ) => sprintf( 'index.php?plugin-customizer-template-%s=%s', $this->slug, $wp_rewrite->preg_index( 1 ) ),
 			 );
 
 			 $wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
@@ -137,7 +171,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		 * @return  Array				The updated array with query variables.
 		 */
 		function query_vars( $query_vars ) {
-			$query_vars[] = sprintf( 'plugin-customizer-template-%s', self::$id );
+			$query_vars[] = sprintf( 'plugin-customizer-template-%s', $this->slug );
 			return $query_vars;
 		}
 
@@ -151,7 +185,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		 */
 		function flush_rewrite_rules() {
 			$rules = $GLOBALS['wp_rewrite']->wp_rewrite_rules();
-			if ( ! isset( $rules[ sprintf( '%s/templates/(.*)$', self::$id ) ] ) ) { // must be the same rule as in rewrite_rule($wp_rewrite)
+			if ( ! isset( $rules[ sprintf( '%s/templates/(.*)$', $this->slug ) ] ) ) { // must be the same rule as in rewrite_rule($wp_rewrite)
 				global $wp_rewrite;
 				$wp_rewrite->flush_rules();
 			}
@@ -167,7 +201,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		 * @version 1.0.0
 		 */
 		function template_loader( $wp_query ) {
-			$key = sprintf( 'plugin-customizer-template-%s', self::$id );
+			$key = sprintf( 'plugin-customizer-template-%s', $this->slug );
 			if ( isset( $wp_query->query_vars[ $key ] ) ) { // same as the first custom variable in query_vars( $query_vars )
 				$template = $wp_query->query_vars[ $key ] . '.php';
 				wp_head();
@@ -188,13 +222,13 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		 *
 		 * @author soderlind
 		 * @version 1.0.0
-		 * @param   string	$template Path to the template
+		 * @param   string	$template plugin_root to the template
 		 */
 		private function _load_template( $template ) {
 			// from: https://developer.wordpress.org/reference/functions/load_template/#comment-727
 			if ( $overridden_template = locate_template( "plugin-customizer/{$template}" ) ) {
 				/*
-				 * locate_template() returns path to file.
+				 * locate_template() returns plugin_root to file.
 				 * if either the child theme or the parent theme have overridden the template, load it.
 				 */
 				load_template( $overridden_template );
@@ -203,7 +237,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 				 * If neither the child nor parent theme have overridden the template,
 				 * we load the template from the 'templates' sub-directory of the directory this file is in.
 				 */
-				load_template( plugin_dir_path( __FILE__ ) . "/templates/{$template}" );
+				load_template( $this->plugin_root . "templates/{$template}" );
 			}
 		}
 		/**
@@ -214,25 +248,25 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		 * @version 1.0.0
 		 */
 		public function plugin_customizer_configure_previewer() {
-			$src = plugins_url( 'js/plugin-customizer-preview-templates.js' ,  __FILE__ );
+			$src = $this->plugin_url . '/src/assets/js/plugin-customizer-preview-templates.js';
 			$deps = array( 'customize-controls' );
-			$version = CLOUD2PNG_VERSION;
+			$version = PLUGIN_CUSTOMIZER_VERSION;
 			$in_footer = 1;
-			wp_enqueue_script( self::$id, $src, $deps, $version , $in_footer );
+			wp_enqueue_script( $this->slug, $src, $deps, $version , $in_footer );
 		}
 
 		abstract public function plugin_customizer_add_templates();
 
 		public function template_url( $template ) {
 			$template = basename( $template, '.php' );
-			$template_url = home_url( sprintf( '%s/templates/%s/?%s=on', self::$id, $template, self::$id ) );
+			$template_url = home_url( sprintf( '%s/templates/%s/?%s=on', $this->slug, $template, $this->slug ) );
 
 			return $template_url;
 		}
 
 		public function add_templates( $default_url, $section_urls = array() ) {
 			wp_add_inline_script(
-				self::$id,
+				$this->slug,
 				sprintf( 'PluginCustomizer.init( %s, %s );',
 					wp_json_encode( $default_url ),
 					wp_json_encode( $section_urls )
@@ -265,7 +299,7 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 			}
 			$url = wp_customize_url();
 			// Add parameter to identify this as a customizer url for this plugin.
-			$url = add_query_arg( self::$id , 'on', $url );
+			$url = add_query_arg( $this->slug , 'on', $url );
 			// If autofocus, add parameter to url.
 			if ( '' !== $autofocus_section ) {
 				$url = add_query_arg( 'autofocus[section]', $autofocus_section, $url );
@@ -278,40 +312,35 @@ if ( ! class_exists( 'PluginCustomizer' ) ) {
 		}
 
 
-		public function plugin_name() {
-			return 'Plugin Customizer';
-		}
-
 		abstract public function customizer_plugin_sections( $wp_customize );
 		abstract public function customizer_plugin_settings( $wp_customize );
 		abstract public function customizer_plugin_controls( $wp_customize );
 
 		// inspired by https://gist.github.com/franz-josef-kaiser/8608140
-		public function switch_theme_root_plugin( $org_root ) {
-			$crrent_theme = wp_get_theme( self::$theme_name );
+		public function switch_theme_root_path( $org_theme_root ) {
+			$crrent_theme = wp_get_theme( $this->theme_name );
 			// if theme exists, no point in changing theme root.
 			if ( $crrent_theme->exists() ) {
-				return $org_root;
+				return $org_theme_root;
 			}
 
-			if ( 'theme_root_uri' === current_filter() ) {
-				remove_filter( current_filter(), array( $this, __FUNCTION__ ) );
-				$new_theme_root_uri = plugins_url( '/theme', __FILE__ );
-				return $new_theme_root_uri;
-			}
-			// If we made it so far we are in the 'theme_root' filter.
-			$new_theme_root = plugin_dir_path( __FILE__ ) . 'theme';
+			$new_theme_root = $this->plugin_root . 'src/assets';
 			# Too early to use register_theme_directory()
 			if ( ! in_array( $new_theme_root, $GLOBALS['wp_theme_directories'] ) ) {
 				$GLOBALS['wp_theme_directories'][] = $new_theme_root;
 			}
-			remove_filter( current_filter(), array( $this, __FUNCTION__ ) );
 
 			return $new_theme_root;
 		}
 
+		public function switch_theme_root_uri( $theme_root_uri /*, $siteurl , $stylesheet_or_template*/  ) {
+			remove_filter( current_filter(), array( $this, __FUNCTION__ ) );
+			$new_theme_root_uri = $this->plugin_url . '/src/assets';
+			return $new_theme_root_uri;
+		}
+
 		public function plugin_theme_name() {
-			return self::$theme_name;
+			return $this->theme_name;
 		}
 	}
 }
