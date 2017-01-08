@@ -190,34 +190,6 @@ class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements
 		return true;
 	}
 
-
-	/**
-	 * Add selective refresh.
-	 *
-	 * @author soderlind
-	 * @version 1.0.0
-	 * @param   WP_Customize_Manager $wp_customize
-	 */
-	public function customizer_plugin_selective_refresh( WP_Customize_Manager $wp_customize ) {
-		global $wp_customize;
-
-		$wp_customize->selective_refresh->add_partial( 'newsletter_title', array(
-			'selector' => '#newsletter-title',
-			'render_callback' => function() {
-				get_option( 'newsletter_title' );
-			},
-		) );
-
-		$wp_customize->selective_refresh->add_partial( 'newsletter_content', array(
-			'selector' => '#newsletter-content',
-			'render_callback' => function() {
-				get_option( 'newsletter_content' );
-			},
-		) );
-		return true;
-	}
-
-
 	/**
 	 * Admin menus
 	 */
