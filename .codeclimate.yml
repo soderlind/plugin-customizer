@@ -4,21 +4,20 @@ engines:
     enabled: true
     config:
       languages:
-      - javascript
-      - php
+        - php
   eslint:
     enabled: true
-    # channel: "eslint-2"
-    # plugins: "wordpress"
-    # extends: "plugin:wordpress/recommended"
   fixme:
     enabled: true
-  phpmd:
+  phpcodesniffer:
     enabled: true
+    config:
+        standard: "phpcs.xml"
 ratings:
   paths:
-  - "**.js"
-  - "**.module"
-  - "**.php"
+    - "**.js"
+    - "**.php"
 exclude_paths:
-- node_modules/
+  - node_modules/**/*
+  - languages/**
+  - src/assets/twentysixteen/**
