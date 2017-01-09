@@ -239,7 +239,7 @@ class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements
 		$menu_redirect = isset( $_GET['page'] ) ? $_GET['page'] : false;
 
 		if ( 'redirect-customizer' == $menu_redirect ) {
-			wp_safe_redirect( $this->get_customizer_url( admin_url() ) );
+			wp_safe_redirect( \PluginCustomizer\Plugin_Customizer::get_customizer_url( admin_url() ) );
 			exit();
 		}
 	}
@@ -277,7 +277,7 @@ class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements
 		}
 		foreach ( $submenu[ $parent ] as $k => $d ) {
 			if ( 'plugin-template' == $d['2'] ) {
-				$submenu[ $parent ][ $k ]['2'] = $this->get_customizer_url( $parent );
+				$submenu[ $parent ][ $k ]['2'] = \PluginCustomizer\Plugin_Customizer::get_customizer_url( $parent );
 				break;
 			}
 		}
@@ -291,12 +291,18 @@ class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements
 	 */
 	function add_admin_bar_customizer_url( $wp_admin_bar ) {
 		global $post;
-		$return_url = ( is_admin() ) ? $this->_get_current_admin_page_url() :  get_permalink( $post->ID );
+		if ( is_admin() ) {
+			$return_url = $this->_get_current_admin_page_url();
+		} elseif ( is_object( $post ) ) {
+			$return_url = get_permalink( $post->ID );
+		} else {
+			$return_url = esc_url( home_url( '/' ) );
+		}
 
 		$args = array(
 			'id' => 'plugin-customizer-link',
 			'title' => __( 'Plugin Customizer', 'plugin-customizer' ),
-			'href' => $this->get_customizer_url( $return_url ),
+			'href' => \PluginCustomizer\Plugin_Customizer::get_customizer_url( $return_url ),
 		);
 
 		$wp_admin_bar->add_node( $args );
@@ -343,7 +349,7 @@ class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements
 
 	public function option_page_customizer_link() {
 		printf( '<a href="%s">%s</a><p class="description">%s</p>',
-		 	$this->get_customizer_url( 'admin.php?page=plugin-customizer', 'newsletter_title_section' ), __( 'Customize', 'plugin-customizer' ),
+		 	\PluginCustomizer\Plugin_Customizer::get_customizer_url( 'admin.php?page=plugin-customizer', 'newsletter_title_section' ), __( 'Customize', 'plugin-customizer' ),
 			__( 'Will use autofocus[section]=newletter_title to focus on the title (eg open it)', 'plugin-customizer' )
 		);
 	}
