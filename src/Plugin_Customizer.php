@@ -2,7 +2,7 @@
 
 namespace PluginCustomizer;
 
-define( 'PLUGIN_CUSTOMIZER_VERSION', '1.1.0' );
+define( 'PLUGIN_CUSTOMIZER_VERSION', '1.1.2' );
 
 if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 	abstract class Plugin_Customizer implements Plugin_Customizer_Interface {
