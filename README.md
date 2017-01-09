@@ -24,9 +24,9 @@ $class_loader = new PS_Auto_Loader();
 $class_loader->addNamespace( 'PluginCustomizer', PLUGIN_CUSTOMIZER_DEMO_PATH . 'src' );
 $class_loader->register();
 
-class MyPlugin extends PluginCustomizer\Plugin_Customizer implements PluginCustomizer\Plugin_Customizer_Interface {
+class MyPlugin extends \PluginCustomizer\Plugin_Customizer implements \PluginCustomizer\Plugin_Customizer_Interface {
 	function __construct() {
-		PluginCustomizer\Plugin_Customizer::init( array(
+		\PluginCustomizer\Plugin_Customizer::init( array(
 			'name' => 'Customizer Demo', // name your plugin
 			'url'  => plugins_url( '', __FILE__ ),
 			'path' => plugin_dir_path( __FILE__ ),
