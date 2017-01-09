@@ -1,5 +1,16 @@
 ## Change Log
 
+### 1.1.2 (2017/01/09 19:09 +00:00)
+- [b06f606](https://github.com/soderlind/plugin-customizer/commit/b06f606914e8df69653ac835681a64c5fed6ad41) Version 1.1.2 (@soderlind)
+- [bff70e3](https://github.com/soderlind/plugin-customizer/commit/bff70e3bc5f1f2554d06b7af84e644758874a556) Add plugin description file for WordPress plugin repository (@soderlind)
+- [65738d2](https://github.com/soderlind/plugin-customizer/commit/65738d218c3a3ba90e5ecee1c0afdbc998932b48) Add deployment tools (@soderlind)
+- [f326601](https://github.com/soderlind/plugin-customizer/commit/f32660183916b785e182d8370c94859785c8c36a) Add plugin banner and icon (@soderlind)
+- [ed9b17b](https://github.com/soderlind/plugin-customizer/commit/ed9b17bf75a2b60e1f512f8cd5a968ebfaeb1e1d) Add missing change theme directory URI (@soderlind)
+- [959e1f4](https://github.com/soderlind/plugin-customizer/commit/959e1f4855b090a2a900e70b16b7e513b9e5e137) Minor bug fix (@soderlind)
+- [3853f52](https://github.com/soderlind/plugin-customizer/commit/3853f52b44a97ca3fe1f07fd7a82df035f5795e0) Update init code (@soderlind)
+- [9c8ebff](https://github.com/soderlind/plugin-customizer/commit/9c8ebff72b00fd01b50da5600a59320ccbb2b469) Remove unneeded code (@soderlind)
+- [1925001](https://github.com/soderlind/plugin-customizer/commit/1925001f96651452b61e6fa64d34772da3831a45) no message (@soderlind)
+- [47ae0c6](https://github.com/soderlind/plugin-customizer/commit/47ae0c6a4b76432ed0205cbbee0dae879190955b) Add CHANGELOG (@soderlind)
 - [aad5679](https://github.com/soderlind/plugin-customizer/commit/aad5679faef54a78244395ed714574863f8eefc4) exclude twentysixteen from rules check (@soderlind)
 - [bc549d4](https://github.com/soderlind/plugin-customizer/commit/bc549d4573fc00c5139b88c1ab0074309e50d0cd) Add link to download and example (@soderlind)
 - [fd01190](https://github.com/soderlind/plugin-customizer/commit/fd01190e62c1c4560fcd47202601bfff92457cd8) Add twentysixteen theme (@soderlind)
