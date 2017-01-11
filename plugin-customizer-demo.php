@@ -35,7 +35,7 @@ class PluginCustomizerDemo extends PluginCustomizer\Plugin_Customizer implements
 	function __construct() {
 		PluginCustomizer\Plugin_Customizer::init( array(
 			'name' => 'Customizer Demo', // name your plugin
-			'url'  => plugins_url( '', __FILE__ ),
+			'url'  => plugins_url( '', __FILE__ ), // note, '' adds a slash to the end of url
 			'path' => plugin_dir_path( __FILE__ ),
 		) );
 		$this->add_admin_menus();
