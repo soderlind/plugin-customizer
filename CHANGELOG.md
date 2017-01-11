@@ -1,5 +1,12 @@
 ## Change Log
 
+### 1.1.3 (2017/01/11 15:50 +00:00)
+- [7976ff1](https://github.com/soderlind/plugin-customizer/commit/7976ff18c04cead5e82729e970e45688f7fbb43a) Version 1.1.3 (@soderlind)
+- [6b566a6](https://github.com/soderlind/plugin-customizer/commit/6b566a634899bea33e9f3318c780dfda9c718060) Add comment (@soderlind)
+- [04f6cdc](https://github.com/soderlind/plugin-customizer/commit/04f6cdc3ee6b04cd66bef519e110c72dd5384b90) Add missing stylesheet_uri filter in change theme root (@soderlind)
+- [c09c437](https://github.com/soderlind/plugin-customizer/commit/c09c437c151e293394cc16a44da333fa4d65c557) Update code example (!!) (@soderlind)
+- [0d86b0c](https://github.com/soderlind/plugin-customizer/commit/0d86b0cecfd032aab6bd94c767ab078654c70c51) Update changelog (@soderlind)
+
 ### 1.1.2 (2017/01/09 19:09 +00:00)
 - [b06f606](https://github.com/soderlind/plugin-customizer/commit/b06f606914e8df69653ac835681a64c5fed6ad41) Version 1.1.2 (@soderlind)
 - [bff70e3](https://github.com/soderlind/plugin-customizer/commit/bff70e3bc5f1f2554d06b7af84e644758874a556) Add plugin description file for WordPress plugin repository (@soderlind)
