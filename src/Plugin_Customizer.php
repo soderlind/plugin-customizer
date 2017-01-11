@@ -78,7 +78,8 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 			 */
 			add_action( 'setup_theme', function() {
 				add_filter( 'theme_root', array( $this, 'switch_theme_root_path' ) );
-				add_filter( 'template_directory_uri', array( $this, 'switch_template_directory_uri' ) );
+				add_filter( 'template_directory_uri', array( $this, 'switch_template_uri' ) );
+				add_filter( 'stylesheet_uri', array( $this, 'switch_template_uri' ) );
 				add_filter( 'pre_option_stylesheet', function(){
 					return $this->theme_name;
 				} );
@@ -334,8 +335,8 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 			return $new_theme_root;
 		}
 
-		public function switch_template_directory_uri( $template_dir_uri  ) {
-			$new_theme_root_uri = $this->plugin_url . '/src/assets/' . $this->theme_name;
+		public function switch_template_uri( $uri  ) {
+			$new_theme_root_uri = $this->plugin_url . 'src/assets/' . $this->theme_name;
 			return $new_theme_root_uri;
 		}
 
