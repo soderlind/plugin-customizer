@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Plugin Customizer Demo
-Version: 1.1.2
+Version: 1.1.3
 Plugin URI:
 Description: Demonstrate how to use the WordPress customizer to set options in a plugin.
 Author: Per Soderlind
@@ -20,7 +20,7 @@ It does:
 5) Add sample customizer settings, settings are saved as options.
 
 */
-define( 'PLUGIN_CUSTOMIZER_DEMO_VERSION', '1.1.2' );
+define( 'PLUGIN_CUSTOMIZER_DEMO_VERSION', '1.1.3' );
 define( 'PLUGIN_CUSTOMIZER_DEMO_PATH',   plugin_dir_path( __FILE__ ) );
 
 // add autoloader
