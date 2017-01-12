@@ -1,5 +1,11 @@
 ## Change Log
 
+### 1.1.4 (2017/01/12 22:20 +00:00)
+- [1dc38fa](https://github.com/soderlind/plugin-customizer/commit/1dc38fa1aa217b7d0152bd9faf45e6110339f5d5) Version 1.1.4 (@soderlind)
+- [425dfa7](https://github.com/soderlind/plugin-customizer/commit/425dfa7e1bc3e925cdf21822841cc782f516baa6) Fix relative path to assets (@soderlind)
+- [0993f3f](https://github.com/soderlind/plugin-customizer/commit/0993f3fbdf8ab725caeb41faa8c034b6c2fa4d72) Fix comment (@soderlind)
+- [b1af8cd](https://github.com/soderlind/plugin-customizer/commit/b1af8cd8de1b06c55991e5bc259d2045a5a2eb23) Update changelog (@soderlind)
+
 ### 1.1.3 (2017/01/11 15:50 +00:00)
 - [7976ff1](https://github.com/soderlind/plugin-customizer/commit/7976ff18c04cead5e82729e970e45688f7fbb43a) Version 1.1.3 (@soderlind)
 - [6b566a6](https://github.com/soderlind/plugin-customizer/commit/6b566a634899bea33e9f3318c780dfda9c718060) Add comment (@soderlind)
