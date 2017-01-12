@@ -50,6 +50,8 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 			$this->plugin_name = $config['name'];
 			$this->plugin_url  = $config['url'];
 			$this->plugin_root = $config['path'];
+			$this->url  = plugins_url( '/', __FILE__ );
+			$this->root = plugin_dir_path( __FILE__ );
 
 			/**
 			 * When saving the setinngs, the customizer settings must be visible for admin-ajax.php
@@ -91,7 +93,7 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 			 * Remove all other panels and sections from the customizer.
 			 */
 			$blank_slate = Blank_Slate::instance();
-			$blank_slate->init( $this->slug, $this->plugin_url, $this->plugin_root );
+			$blank_slate->init( $this->slug, $this->url, $this->root );
 
 			/**
 			 * Create preview template permalink rules.
@@ -250,7 +252,7 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 		 * @version 1.0.0
 		 */
 		public function plugin_customizer_configure_previewer() {
-			$src = $this->plugin_url . '/src/assets/js/plugin-customizer-preview-templates.js';
+			$src = $this->url . 'assets/js/plugin-customizer-preview-templates.js';
 			$deps = array( 'customize-controls' );
 			$version = PLUGIN_CUSTOMIZER_VERSION;
 			$in_footer = 1;
@@ -326,7 +328,7 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 				return $org_theme_root;
 			}
 
-			$new_theme_root = $this->plugin_root . 'src/assets';
+			$new_theme_root = $this->root . 'assets';
 			# Too early to use register_theme_directory()
 			if ( ! in_array( $new_theme_root, $GLOBALS['wp_theme_directories'] ) ) {
 				$GLOBALS['wp_theme_directories'][] = $new_theme_root;
@@ -336,7 +338,7 @@ if ( ! class_exists( 'PluginCustomizer\Plugin_Customizer' ) ) {
 		}
 
 		public function switch_template_uri( $uri  ) {
-			$new_theme_root_uri = $this->plugin_url . 'src/assets/' . $this->theme_name;
+			$new_theme_root_uri = $this->url . 'assets/' . $this->theme_name;
 			return $new_theme_root_uri;
 		}
 

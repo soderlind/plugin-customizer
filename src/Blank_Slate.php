@@ -75,7 +75,7 @@ if ( ! class_exists( 'PluginCustomizer\Blank_Slate' ) ) {
 
 			add_action( 'customize_controls_enqueue_scripts', function() {
 				$handle = 'plugin-customizer-blank-slate';
-				$src = $this->plugin_url . '/src/assets/js/plugin-customizer-blank-slate.js';
+				$src = $this->plugin_url . 'assets/js/plugin-customizer-blank-slate.js';
 				$deps = array( 'customize-controls' );
 				$ver = false;
 				$in_footer = true;
